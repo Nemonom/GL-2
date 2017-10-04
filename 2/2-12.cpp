@@ -227,7 +227,8 @@ void draw_background(int shape)
 
 		for (int i = 0; i < mouse_count%6; ++i)
 		{
-			glColor4f(0.4f, 0.7f, 0.8f, 1.0f);//점색
+			glColor4f(0.2 + 0.1 * i, 0.6 - 0.1 * i, 0.4 + 0.1 * i, 1.0f);//점색
+
 			glVertex3f(free_dot[i][0], free_dot[i][1], 0.0f);//점의 좌표
 		}
 		glEnd();
