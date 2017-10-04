@@ -65,7 +65,7 @@ GLvoid drawScene(GLvoid) {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);    // นูลมป๖
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	line(); // มยวฅรเ
+	//line(); // มยวฅรเ
 	
 
 	glPushMatrix();
