@@ -46,10 +46,13 @@ float free_dot[5][2] = { 0 };
 float dot[1000][2] = { 0 };
 float dot_x = 0, dot_y = 0;
 int move_cnt = 0;
+int my_turn = 1;
+
 
 bool bigger = false;
 bool zig_turn = false;
 bool turn = false;
+bool free_turn = false;
 int mouse_count = 0;
 float angle = 0;
 
@@ -149,7 +152,15 @@ void Mouse(int button, int state, int x, int y)
 	{
 		free_dot[mouse_count % 6][0] = x - width/2;
 		free_dot[mouse_count % 6][1] = -(y - height/2);
+		if (mouse_count % 6 == 0)
+		{
+			player_x = free_dot[mouse_count % 6][0];
+			player_y = free_dot[mouse_count % 6][1];
+			my_turn = 1; free_turn = false;
+		}
 		mouse_count++;
+
+
 	}
 }
 
@@ -157,7 +168,10 @@ void TimerFunction(int value) {
 	size_move();
 	move(shape);
 	glutPostRedisplay();   // 화면 재 출력
-	glutTimerFunc(10, TimerFunction, 1); // 타이머함수 재 설정 
+	if (shape == 4)
+		glutTimerFunc(20, TimerFunction, 1); // 타이머함수 재 설정 
+	else
+		glutTimerFunc(10, TimerFunction, 1); // 타이머함수 재 설정 
 }
 
 void line()
@@ -187,6 +201,7 @@ void init()
 	dot_x = 0, dot_y = 0;
 	move_cnt = 0;
 	turn = false;
+	my_turn = 1;
 }
 
 void draw_background(int shape)
@@ -260,7 +275,64 @@ void move(int shape)
 		break;
 
 	case 4:
-		mouse_count % 6;
+		if (mouse_count % 6 == 5)
+		{
+			if (free_turn == false)
+			{
+				float an = (free_dot[my_turn][1] - free_dot[my_turn - 1][1])
+					/ (free_dot[my_turn][0] - free_dot[my_turn - 1][0]);
+				float num = player_y - an * player_x;
+
+				player_x += ((free_dot[my_turn][0] - free_dot[my_turn - 1][0])
+					/ abs(free_dot[my_turn][0] - free_dot[my_turn - 1][0])) * 2;
+				player_y = an * player_x + num;
+
+				//if() // 일정범위면 위치 정확히 옮기고 my_turn++; my_turn이 4면 1될때까지 my_turn-- free_turn으로 조절
+				RECT rect = { free_dot[my_turn][0] - 2, free_dot[my_turn][1] - 2
+				, free_dot[my_turn][0] + 2, free_dot[my_turn][1] + 2 };
+				RECT range = { player_x - 2, player_y - 2, player_x + 2, player_y + 2 };
+				RECT InterSect;
+				if (IntersectRect(&InterSect, &rect, &range)) // 충돌햇옹
+				{
+					player_x = free_dot[my_turn][0];
+					player_y = free_dot[my_turn][1];
+					if (my_turn == 4)
+					{
+						free_turn = true;
+					}
+					else
+						my_turn++;
+				}
+			}	
+			else if (free_turn == true)
+			{
+				float an2 = (free_dot[my_turn-1][1] - free_dot[my_turn][1])
+					/ (free_dot[my_turn-1][0] - free_dot[my_turn][0]);
+				float num2 = player_y - an2 * player_x;
+
+				player_x += ((free_dot[my_turn-1][0] - free_dot[my_turn][0])
+					/ abs(free_dot[my_turn-1][0] - free_dot[my_turn][0])) * 2;
+				player_y = an2 * player_x + num2;
+
+				//if() // 일정범위면 위치 정확히 옮기고 my_turn++; my_turn이 4면 1될때까지 my_turn-- free_turn으로 조절
+				RECT rect2 = { free_dot[my_turn-1][0] - 2, free_dot[my_turn-1][1] - 2
+					, free_dot[my_turn-1][0] + 2, free_dot[my_turn-1][1] + 2 };
+				RECT range2 = { player_x - 2, player_y - 2, player_x + 2, player_y + 2 };
+				RECT InterSect;
+				if (IntersectRect(&InterSect, &rect2, &range2)) // 충돌햇옹
+				{
+					player_x = free_dot[my_turn-1][0];
+					player_y = free_dot[my_turn-1][1];
+					if (my_turn == 1)
+					{
+						free_turn = false;
+					}
+					else
+						my_turn--;
+				}
+			}
+			
+		}
 		break;
 	}
 }
