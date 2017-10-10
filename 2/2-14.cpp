@@ -74,14 +74,10 @@ GLvoid drawScene(GLvoid) {
 		rotation(0);
 	if (x_start)
 		rotation(1);
-	move();
 	draw_big_semo();
 
-	glPushMatrix();
-	if (start)
-		rotation(0);
+	move(); // 세모움직이기
 	draw_small_semo();
-	glPopMatrix();
 
 	glPopMatrix();
 

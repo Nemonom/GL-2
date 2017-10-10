@@ -77,7 +77,7 @@ GLvoid drawScene(GLvoid) {
 
 GLvoid Reshape(int w, int h) {
 	glViewport(0, 0, w, h);
-	glOrtho(-width / 2, width / 2, -height / 2, height / 2, -300, 300);
+	glOrtho(-width / 2, width / 2, -height / 2, height / 2, -50, 50);
 }
 
 
@@ -161,11 +161,11 @@ void rotation(int i)
 	glTranslatef(model_x[i], model_y[i], 0.0);
 	if (move_ok)
 		glRotatef(angle[i], 0.0, 0.0, 1.0);
-	//glTranslatef(-model_x[i], -model_y[i], 0.0);
 	angle[i]++;
 }
 
 void size_move(int i)
 {
-	r[i]++;
+	if (r[i] < 10)
+		r[i]++;
 }

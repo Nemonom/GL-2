@@ -18,7 +18,7 @@ void SpecialKeyboard(int key, int x, int y);
 
 ///////////////ÇÔ¼ö
 void line();
-void init();
+void init(); 
 void sin();
 void cos();
 void spring();
