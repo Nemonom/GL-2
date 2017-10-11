@@ -25,7 +25,8 @@ GLvoid Keyboard(unsigned char key, int x, int y);//키보드
 void init();
 void line();
 void draw_big_semo(); // 그려
-void draw_small_semo();
+void draw_small_semo1();
+void draw_small_semo2();
 void move(); // 배경따라 움직
 void rotation(int i);
 void draw();
@@ -37,6 +38,7 @@ float big1[3][2] = { 0 };
 float big2[3][2] = { 0 };
 int x_angle = 0;
 int angle = 0;
+int s_angle = 0;
 float small1_x = 0, small1_y = 0;
 float small2_x = 0, small2_y = 0;
 float small1[3][2] = { 0 };
@@ -74,10 +76,18 @@ GLvoid drawScene(GLvoid) {
 		rotation(0);
 	if (x_start)
 		rotation(1);
+	move(); // 세모움직이기
 	draw_big_semo();
 
-	move(); // 세모움직이기
-	draw_small_semo();
+	glPushMatrix();
+	rotation(5);
+	draw_small_semo1();
+	glPopMatrix();
+
+	glPushMatrix();
+	rotation(6);
+	draw_small_semo2();
+	glPopMatrix();
 
 	glPopMatrix();
 
@@ -179,14 +189,28 @@ void rotation(int i)
 		glRotatef(x_angle, 0.0, 0.0, 1.0);
 		x_angle += 10;
 	}
-	else
+	else if(i == 0)
 	{
 		glRotatef(angle, 0.0, 1.0, 0.0);
 		angle += 10;
 	}
+	else if (i == 5)
+	{
+		glTranslatef(small1_x, small1_y, 0.0);
+		glRotatef(s_angle, 0.0, 1.0, 0.0);
+		glTranslatef(-small1_x, -small1_y, 0.0);
+		s_angle += 10;
+	}
+	else if (i == 6)
+	{
+		glTranslatef(0.0, small2_y, small2_x);
+		glRotatef(s_angle, 0.0, 1.0, 0.0);
+		glTranslatef(0.0, -small2_y, -small2_x);
+		s_angle += 10;
+	}
 }
 
-void draw_small_semo()
+void draw_small_semo1()
 {
 	glBegin(GL_LINE_LOOP);
 	for (int i = 0; i < 3; ++i)
@@ -196,6 +220,10 @@ void draw_small_semo()
 	}
 	glEnd();
 
+}
+
+void draw_small_semo2()
+{
 	glBegin(GL_LINE_LOOP);
 	for (int i = 0; i < 3; ++i)
 	{
